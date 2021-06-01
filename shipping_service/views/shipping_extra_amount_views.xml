@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="shipping_extra_amount_form_view" model="ir.ui.view">
+        <field name="name">Shipping Extra Amount</field>
+        <field name="model">shipping.extra_amount</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="amount"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="shipping_extra_amount_tree_view" model="ir.ui.view">
+        <field name="name">Extra Amount</field>
+        <field name="model">shipping.extra_amount</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="amount"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_open_shipping_extra_amount" model="ir.actions.act_window">
+        <field name="name">Shipping Extra Amount</field>
+        <field name="res_model">shipping.extra_amount</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="shipping_extra_amount_tree_view"/>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

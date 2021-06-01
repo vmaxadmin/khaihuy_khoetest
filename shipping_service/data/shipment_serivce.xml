@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_category_shipments" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Shipments</field>
+        </record>
+        <record id="product_product_shipment" model="product.product">
+            <field name="name">Shipment Fee</field>
+            <field name="default_code">SHIPMENT_001</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="shipping_service.product_category_shipments"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+        </record>
+        <record id="staff_shipment_service" model="shipping.service">
+            <field name="name">Staff Shipment Service</field>
+            <field name="auto_add_fee" eval="False"/>
+            <field name="free_over" eval="False"/>
+            <field name="service_type">staff</field>
+            <field name="price_per_km">5000</field>
+            <field name="margin_percent">0</field>
+            <field name="product_id" ref="shipping_service.product_product_shipment"/>
+        </record>
+    </data>
+</odoo>

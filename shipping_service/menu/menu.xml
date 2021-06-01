@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_shipping_service_root"
+        name="Shipping Service"
+        sequence="10"
+        groups="group_shipping_user"
+        web_icon="fa fa-rocket,#FFAB4A,#34495e"
+    />
+    <menuitem
+        id="menu_shipping_order"
+        name="Shipping Order"
+        parent="shipping_service.menu_shipping_service_root"
+        sequence="10"
+        action="shipping_service.action_open_shipping_order"
+        groups="group_shipping_user"/>
+    <menuitem
+        id="menu_shipping_service"
+        name="Shipping Service"
+        parent="shipping_service.menu_shipping_service_root"
+        sequence="20"
+        action="shipping_service.action_open_shipping_services"
+        groups="group_shipping_user"/>
+    <menuitem
+        id="menu_shipping_extra"
+        name="Shipping Extra Amount"
+        parent="shipping_service.menu_shipping_service_root"
+        sequence="30"
+        action="shipping_service.action_open_shipping_extra_amount"
+        groups="group_shipping_user"/>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_open_shipping_orders_from_repair" model="ir.actions.act_window">
+            <field name="name">Shipments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shipping.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('sp_line_ids.repair_id','=',active_id)]</field>
+    </record>
+    <record id="view_repair_order_form_inherit_shipment" model="ir.ui.view">
+        <field name="name">repair.order.inherit.shipping</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_created_invoice']" position="after">
+                <button class="oe_stat_button" icon="fa-space-shuttle"
+                        type="action" name="%(action_assign_order_to_shiping)d">
+                    <field name="shipment_count" string="Shipments" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_repair_order_tree_inherit_shipment" model="ir.ui.view">
+        <field name="name">repair.order.tree.inherit.shipping</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="shipping_state" widget="badge"/>
+                <field name="is_shipped"/>
+                <field name="shipping_ids" widget="many2many_tags" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

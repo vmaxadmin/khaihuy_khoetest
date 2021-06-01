@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="shipping_service_form_views" model="ir.ui.view">
+        <field name="name">Shipping Services</field>
+        <field name="model">shipping.service</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="service_type"/>
+                            <field name="product_id" domain="[('type', '=', 'service')]"/>
+                        </group>
+                        <group>
+                            <field name="free_over"/>
+                            <field name="amount_to_free" attrs="{'invisible': [('free_over', '=', False)]}"/>
+                            <field name="auto_add_fee"/>
+                            <field name="margin_percent"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="staff-service-info" string="Staff Shipment Service">
+                            <group>
+                                <field name="price_per_km"/>
+                                <field name="googlemaps_api_key"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="shipping_service_tree_view" model="ir.ui.view">
+        <field name="name">Services</field>
+        <field name="model">shipping.service</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_open_shipping_services" model="ir.actions.act_window">
+        <field name="name">Shipping Services</field>
+        <field name="res_model">shipping.service</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="shipping_service_tree_view"/>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="shipping_order_form_views" model="ir.ui.view">
+        <field name="name">Shipping Orders</field>
+        <field name="model">shipping.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(action_add_shipping_order_line)d" string="Add Shipping Line" type="action" 
+                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'open')]}"/>
+                    <button name="action_open_shipping_order" string="Open Session" type="object" class="oe_highlight"
+                        attrs="{'invisible':[('state', '!=', 'new')]}"/>
+<!--                    <button name="action_get_source_address" string="Get Source Address" type="object" -->
+<!--                        class="oe_highlight" attrs="{'invisible':['|',('sp_line_ids', '=', []),('state', '!=', 'prepare')]}"/>-->
+                    <button name="action_close_shipping_order" string="Close Session" type="object" class="oe_highlight"
+                        attrs="{'invisible':[('state', '!=', 'open')]}" groups="shipping_service.group_shipping_manager"/>
+                    <button name="action_cancel_shipping_order" string="Cancel" type="object"
+                        attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}" groups="base.group_system"/>
+                    <button name="action_reset_shipping_order" string="Reset to draft" type="object"
+                        attrs="{'invisible': [('state', '!=', 'cancel')]}" groups="base.group_system"/>
+<!--                    <button name="get_shipment_rate" string="Get Shipment Fee" type="object"-->
+<!--                        attrs="{'invisible': ['|',('sp_line_ids', '=', []),('state', '!=', 'prepare')]}"/>-->
+                    <field name="state" widget="statusbar" nolabel="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name" attrs="{'readonly':[('state', '!=', 'new')]}" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="service_type" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="service_id" attrs="{'readonly':[('state', '!=', 'new')]}" required="1"/>
+                            <field name="user_id" attrs="{'readonly':[('state', '!=', 'new')]}"
+                                   options="{'no_create_edit': True, 'no_create': True}" required="1"/>
+                            <field name="shipper_id" attrs="{'readonly':[('state', '!=', 'new')]}"
+                                   options="{'no_create_edit': True, 'no_create': True}" required="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="team_id"/>
+                        </group>
+                        <group>
+                            <field name="scheduled_date" attrs="{'readonly':[('state', '!=', 'new')]}"/>
+                            <field name="done_date" attrs="{'readonly':[('state', '!=', 'new')]}"/>
+                            <field name="partner_source_id" required="1"
+                                   attrs="{'readonly':[('state', '!=', 'new')]}"/>
+                            <field name="from_address" attrs="{'invisible': [('partner_source_id', '=', False)], 'readonly':[('state', '!=', 'new')]}" required="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Shipping Order Line">
+                            <field name="sp_line_ids" widget="one2many_list" mode="tree,form" readonly="0">
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="order_type" required="1"/>
+                                            <field name="repair_id" attrs="{'invisible': [('order_type', '!=', 'repair')],     'required':[('order_type', '=', 'repair')]}"/>
+                                            <field name="sale_id" attrs="{'invisible': [('order_type', '!=', 'sale')], 'required':[('order_type', '=', 'sale')]}"/>
+                                            <field name="purchase_id" attrs="{'invisible': [('order_type', '!=', 'purchase')], 'required':[('order_type', '=', 'purchase')]}"/>
+                                            <field name="shipper_id" required="1"/>
+                                            <field name="partner_source_id" required="1"/>
+                                            <field name="from_address"/>
+                                        </group>
+                                        <group>
+                                            <field name="partner_shipping_id" required="1"/>
+                                            <field name="to_address" required="1"/>
+                                            <field name="phone"/>
+                                            <field name="currency_id" invisible="1"/>
+                                            <field name="company_id" invisible="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="distance"/>
+                                            <field name="extra_amount_id" invisible="1"/>
+                                            <field name="extra_amount" invisible="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                            <field name="amount_fee" invisible="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                            <field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                            <field name="note"/>
+                                        </group>
+                                    </group>
+                                </form>
+                                <tree editable="bottom" default_order="sequence" create="0">
+
+                                    <field name="sequence"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="order_type" optional="hide"/>
+                                    <field name="sale_id" optional="show"/>
+                                    <field name="purchase_id" optional="show"/>
+                                    <field name="repair_id" optional="show"/>
+                                    <field name="partner_source_id" optional="hide"/>
+                                    <field name="from_address"/>
+                                    <field name="partner_shipping_id" required="1" optional="hide"/>
+                                    <field name="to_address" required="1"/>
+                                    <field name="phone"/>
+                                    <field name="distance" sum="Total"/>
+                                    <field name="extra_amount_id" invisible="1"/>
+                                    <field name="extra_amount" widget="monetary" invisible="1"/>
+                                    <field name="amount_fee" widget="monetary" invisible="1"/>
+                                    <field name="subtotal" widget="monetary" optional="hide"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="state" optional="show"/>
+                                    <button name="action_show_details_shipping_line" type="object" icon="fa-arrow-right" width="0.1" attrs="{'readonly':[('parent.state', '!=', ('new', 'open'))]}"/>
+                                </tree>
+                            </field>
+                            <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <div class="oe_inline o_td_label">
+                                        <label for="total_amount"/>
+                                    </div>
+                                    <field name="total_amount" nolabel="1" class="oe_inline o_td_label" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <group>
+                                <field name="internal_note" placeholder="Internal Note ..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="shipping_order_tree_view" model="ir.ui.view">
+        <field name="name">Shipping</field>
+        <field name="model">shipping.order</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'prepare'" decoration-info="state == 'shipping'"
+                  decoration-muted="state in ('cancel', 'done')" default_order="name desc">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="shipper_id"/>
+                <field name="scheduled_date"/>
+                <field name="done_date"/>
+                <field name="total_amount"/>
+                <field name="service_id"/>
+                <field name="state"/>
+                <field name="team_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="shipping_order_tree_search" model="ir.ui.view">
+        <field name="name">Shipping</field>
+        <field name="model">shipping.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="user_id"/>
+                <filter string="Staff" domain="[('service_type', '=', 'staff')]" name="shipping_type_staff"/>
+                <group expand="0" string="Group By">
+                   <filter string="State" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                   <filter string="User" name="group_by_user" domain="[]" context="{'group_by': 'user_id'}"/>
+                   <filter string="Shipper" name="group_by_shipper" domain="[]" context="{'group_by': 'shipper_id'}"/>
+                   <filter string="Done Date" name="group_by_date_done" domain="[]" context="{'group_by': 'done_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="shipping_order_form_inherit" model="ir.ui.view">
+        <field name="name">Shipping</field>
+        <field name="model">shipping.order</field>
+        <field name="inherit_id" ref="shipping_order_form_views"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="shipping_order_tree_inherit" model="ir.ui.view">
+        <field name="name">Shipping</field>
+        <field name="model">shipping.order</field>
+        <field name="inherit_id" ref="shipping_order_tree_view"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">1</attribute>
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="action_open_shipping_order" model="ir.actions.act_window">
+        <field name="name">Shipping Order</field>
+        <field name="res_model">shipping.order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="shipping_order_tree_view"/>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- shipping order line -->
+
+    <record id="shipping_order_line_form_views" model="ir.ui.view">
+        <field name="name">Shipping Line</field>
+        <field name="model">shipping.order.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start_shipment" string="Start" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'prepare')]}"/>
+                    <button name="action_done_shipment" string="Done" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'shipping')]}"/>
+                    <button name="action_reset_to_draft" string="Reset" type="object"
+                            attrs="{'invisible': [('state', '!=', 'cancel')]}" groups="base.group_system"/>
+                    <button name="action_cancel_shipment" string="Cancel Shipment" type="object"
+                            attrs="{'invisible': [('state', 'not in', ('prepare', 'shipping'))]}" groups="base.group_system"/>
+                    <button name="get_shipment_rate" string="Get Distance" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'prepare')]}"/>
+                    <field name="state" widget="statusbar" nolabel="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="order_type"/>
+                            <field name="repair_id" attrs="{'invisible': [('order_type', '!=', 'repair')],     'required':[('order_type', '=', 'repair')]}"/>
+                            <field name="sale_id" attrs="{'invisible': [('order_type', '!=', 'sale')], 'required':[('order_type', '=', 'sale')]}"/>
+                            <field name="purchase_id" attrs="{'invisible': [('order_type', '!=', 'purchase')], 'required':[('order_type', '=', 'purchase')]}"/>
+                            <field name="shipper_id" readonly="1"/>
+                            <field name="partner_source_id" required="1"/>
+                            <field name="from_address"/>
+                        </group>
+                        <group>
+                            <field name="partner_shipping_id" required="1"/>
+                            <field name="to_address" required="1"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="distance"/>
+                            <field name="extra_amount_id" invisible="1"/>
+                            <field name="extra_amount" invisible="1"/>
+                            <field name="amount_fee" invisible="1"/>
+                            <field name="subtotal"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

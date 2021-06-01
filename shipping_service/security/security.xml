@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_category_shipping">
+            <field name="name">Shipping</field>
+            <field name="description">Shipping Service System</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="group_shipping_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_shipping"/>
+            <field name="implied_ids" eval="[(4, ref('khaihuy_module.group_sale_salesman_team_manage'))]"/>
+        </record>
+
+        <record id="group_shipping_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="module_category_shipping"/>
+            <field name="implied_ids" eval="[(4, ref('group_shipping_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        <!-- Team Sale -->
+        <record id="shipping_order_team_rule" model="ir.rule">
+            <field name="name">Team Shipping Order</field>
+            <field ref="shipping_service.model_shipping_order" name="model_id"/>
+            <field name="domain_force">['|', '|', ('user_id','=',False),('user_id', '=', user.id),('team_id.member_ids', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('shipping_service.group_shipping_user'))]"/>
+        </record>
+        <record id="shipping_order_line_team_rule" model="ir.rule">
+            <field name="name">Team Shipping Order Line</field>
+            <field ref="shipping_service.model_shipping_order_line" name="model_id"/>
+            <field name="domain_force">['|', '|', ('user_id','=',False),('user_id', '=', user.id),('team_id.member_ids', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('shipping_service.group_shipping_user'))]"/>
+        </record>
+        <!-- Admin shipping -->
+        <record id="admin_shipping_order_team_rule" model="ir.rule">
+            <field name="name">Manager Team Repair Order</field>
+            <field ref="shipping_service.model_shipping_order" name="model_id"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(6, 0, [ref('shipping_service.group_shipping_manager')])]"/>
+        </record>
+        <record id="admin_shipping_order_line_team_rule" model="ir.rule">
+            <field name="name">Manager Team Repair Line</field>
+            <field ref="shipping_service.model_shipping_order_line" name="model_id"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(6, 0, [ref('shipping_service.group_shipping_manager')])]"/>
+        </record>
+    </data>
+</odoo>

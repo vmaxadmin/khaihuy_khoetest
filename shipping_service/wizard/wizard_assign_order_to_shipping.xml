@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="assign_order_to_shiping" model="ir.ui.view">
+            <field name="name">assign.order.to.shiping.view</field>
+            <field name="model">assign.order.2shipping</field>
+            <field name="arch" type="xml">
+                <form string="Assign To Shipping">
+                    <group>
+                        <group>
+                            <field name="shipping_id"/>
+                            <field name="shipper_id" />
+                        </group>
+                         <group>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Assign" name="action_assign_to_shipping_order" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_assign_order_to_shiping" model="ir.actions.act_window">
+            <field name="name">Assign To Shipping</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">assign.order.2shipping</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="shipping_service.assign_order_to_shiping"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
