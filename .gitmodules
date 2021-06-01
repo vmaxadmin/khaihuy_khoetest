@@ -1,0 +1,4 @@
+[submodule "vmaxadmin/khaihuy_odoo14"]
+	path = vmaxadmin/khaihuy_odoo14
+	url = git@github.com:vmaxadmin/khaihuy_odoo14.git
+	branch = production
